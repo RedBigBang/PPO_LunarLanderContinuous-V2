@@ -36,7 +36,7 @@ class Agent_PPO2_continuous():
         self.up_bound = up_bound
         self.down_bound = down_bound
 
-    def show(self):
+    def train_show_train(self):
         """展示一轮游戏"""
         self.Env.close()
         env = gym.make(self.env_name, render_mode='human')
@@ -49,6 +49,20 @@ class Agent_PPO2_continuous():
             state, reward, terminated, _, _ = env.step(action)
         env.close()
         self.Env = gym.make(self.env_name, render_mode=None)
+
+    def show(self):
+        """循环展示"""
+        self.Env.close()
+        env = gym.make(self.env_name, render_mode='human')
+        while True:
+            state = env.reset()
+            state = state[0]
+            terminated = False
+            while not terminated:
+                with torch.no_grad():
+                    action, _, _ = self.act(state)
+                state, reward, terminated, _, _ = env.step(action)
+
 
     def run_episode(self):
         """
