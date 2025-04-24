@@ -1,0 +1,2 @@
+# PPO_LunarLanderContinuous-V2
+使用Beta分布和自截断Critic的PPO强化学习算法解决Gym-LunarLanderContinuous-v2问题
