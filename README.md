@@ -36,10 +36,10 @@ Project_Root/
 │   │   ├── Agent.py       # 智能体交互逻辑
 │   │   └── Critic.py      # 价值评估网络
 │   │
-│   ├── Run/               # 运行入口
-│   │   └── PlayerBeta.py  # Beta策略执行脚本
+│   ├── Run/               
+│   │   └── PlayerBeta.py  # Beta策略模型
 │   │
 │   ├── README.md          # 说明文档
-│   └── main.py            # 模型展示
-
+│   ├── main.py            # 模型展示
+    └── run_trained_model  # 已训练模型运行脚本
           
