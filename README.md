@@ -2,26 +2,48 @@
 使用Beta分布和自截断Critic的PPO强化学习算法解决Gym-LunarLanderContinuous-v2问题
 
 
-![描述文字](data/picture/pygamewindow2025-04-2420-09-02-ezgif.com-video-to-gif-converter.gif)
-*（训练效果）*
+![训练效果](data/picture/pygamewindow2025-04-2420-09-02-ezgif.com-video-to-gif-converter.gif)
+
+# 🚀 改进PPO算法：连续有界动作空间优化方案
 
 ## 📌 项目简介
-- **描述**：基于PPO强化学习算法的LunarlanderContinuous问题求解
+PPO(Proximal Policy Optimization)是OpenAI团队于2018年提出的强化学习算法。该算法在Actor-Critic框架下引入重要性采样和独特的梯度裁剪机制，在离散动作环境中表现出色。
+在连续动作空间问题中，PPO通常需将Actor部分的分类问题转化为回归问题,即对每个动作维度输出高斯分布的参数(均值和方差)。然而，这一设计存在两个关键问题：
+
+1. **动作空间有界性与高斯分布无限支撑集的矛盾**  
+   🔧 传统高斯策略的无限支撑集与物理系统有限动作范围（如关节角度限制）不兼容  
+2. **Critic训练稳定性问题**  
+   ⚡ Critic网络在PPO单样本重复训练中易出现振荡和过拟合,增大价值估计偏差，降低策略优化效果。
+
+**针对以上两个问题进行以下改进:**
 
 
-## 🌟 特色亮点
-- **Beta分布**：相较于传统采用无限支撑域的高斯分布(Gaussian distribution)作为策略估计的方法，本模型可使用严格定义在[0,1]区间的Beta分布进行策略建模。
+## 技术改进
+| 模块     | 创新点                                 | 技术优势                     |
+|--------|-------------------------------------|--------------------------|
+| Actor  | Beta分布替代高斯分布                        | 严格匹配[0,1]动作边界,拥有更灵活的策略选择 |
+| Critic | 提出对比截断的Critic损失函数，限制价值函数在训练周期内的变化幅度 | Critic训练方差大幅减小，提高模型预测精度  |
+| Buffer | 设计优先级动态调整的循环缓冲存储结构，优先采样并训练TD误差较大样本  | 样本利用率提升，提高Critic鲁棒性      |
 
-- **Critic自截断机制**：针对Critic在训练过程中易衰退的现象，本模型使用了自适应的Critic_loss截断方法,大幅增加训练稳定性
+## 训练过程
 
-## 🛠️ 项目结构
+<img src="data/picture/PPOC_BETA_LunarLanderContinuous-v2.png" width="800" height="600">
 
-```bash
+# 📦 项目结构与库依赖
+
+```python
+库依赖/
+torch==2.6.0+cu126      # 深度学习框架
+gym==0.26.2             # 强化学习环境（含LunarLanderContinuous-v2）
+numpy==1.26.4           # 数值计算
+tqdm==4.67.1            # 进度条
+matplotlib==3.10.1      # 训练图记录
+
 Project_Root/
 │
 ├── data/                  
 │   │
-│   model/                 # 训练好的模型参数(仅有Beta策略)
+│   model/                 # 训练好的模型（使用请运行run_trained_model）
 │   ├── ppo2_continue_Actor_Beta.pth    # Actor网络
 │   ├── ppo2Continue_Critic_Beta.pth   # Critic网络
 │   │
@@ -42,4 +64,3 @@ Project_Root/
 │   ├── README.md          # 说明文档
 │   ├── main.py            # 模型展示
     └── run_trained_model  # 已训练模型运行脚本
-          
